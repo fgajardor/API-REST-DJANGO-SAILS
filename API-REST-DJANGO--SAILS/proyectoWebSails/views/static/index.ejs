@@ -1,0 +1,130 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.1/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="http://v4.pingendo.com/assets/bootstrap/themes/magenta.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body onload="buildHtmlTable('#excelDataTable')">
+  <div class="section section-fill-height section-opaque-dark">
+    <div class="background-image background-image-fixed" style="background-image : url('http://v4.pingendo.com/assets/photos/business/cover-1.jpg')"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 col-offset-md-2 text-left">
+          <h1 class="display-1  text-inverse">Listado Mesas</h1>
+          <p class="lead  text-inverse"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-y-3 section section-fill-height">
+    <div class="background-image" style="background-image : url('http://v4.pingendo.com/assets/photos/business/cover-1.jpg')"></div>
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+          <table id="excelDataTable" border="1">
+          </table>
+
+
+          <script>
+            var myList = "";
+            var getJSON = function(url, callback) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.responseType = 'json';
+                xhr.onload = function() {
+                  var status = xhr.status;
+                  if (status == 200) {
+                    callback(null, xhr.response);
+                  } else {
+                    callback(status);
+                  }
+                };
+                xhr.send();
+            };
+            getJSON('https://api.myjson.com/bins/1e04q1',
+            function(err, data) {
+              if (err != null) {
+                alert('Something went wrong: ' + err);
+              } else {
+                var JSONString = JSON.stringify(data);
+                
+              }
+            });
+            
+            
+            var myList = [{"nombre":"Felipe","tipoPedido":"Wopper","valor":4000},{"nombre":"Francisco","tipoPedido":"Completo","valor":2000},{"nombre":"Daniela","tipoPedido":"Sushi","valor":5990},{"nombre":"Francheska","tipoPedido":"Pizza","valor":4500}];
+            
+            // Builds the HTML Table out of myList.
+            function buildHtmlTable(selector) {
+              var columns = addAllColumnHeaders(myList, selector);
+            
+              for (var i = 0; i < myList.length; i++) {
+                var row$ = $('<tr/>');
+                for (var colIndex = 0; colIndex < columns.length; colIndex++) {
+                  var cellValue = myList[i][columns[colIndex]];
+                  if (cellValue == null) cellValue = "";
+                  row$.append($('<td/>').html(cellValue));
+                }
+                $(selector).append(row$);
+              }
+            }
+            
+            // Adds a header row to the table and returns the set of columns.
+            // Need to do union of keys from all records as some records may not contain
+            // all records.
+            function addAllColumnHeaders(myList, selector) {
+              var columnSet = [];
+              var headerTr$ = $('<tr/>');
+            
+              for (var i = 0; i < myList.length; i++) {
+                var rowHash = myList[i];
+                for (var key in rowHash) {
+                  if ($.inArray(key, columnSet) == -1) {
+                    columnSet.push(key);
+                    headerTr$.append($('<th/>').html(key));
+                  }
+                }
+              }
+              $(selector).append(headerTr$);
+            
+              return columnSet;
+            }
+          </script>
+
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+
+  <div class="bg-faded p-y-0 section">
+    <div class="container-fluid"></div>
+  </div>
+
+  <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/js/bootstrap.js"></script>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+</html>
